@@ -45,24 +45,25 @@ def register_external_model(refresh_mode=False):
         try:
             autocomplete_fields = []
             display_fields = []
-            fields = []
             search_fields = []
             filter_fields = []
 
             for model_field in DBSyncModelColumn.objects.filter(model=name).order_by("order"):
                 field = model_field.name
-                fields.append(field)
+                if model_field.is_foreign_key:
+                    d_field = field[:-3] if field.endswith("_id") else field
+                else:
+                    d_field = field
 
                 if model_field.in_list_display_list:
-                    method_name = f"d_{field}"
+                    method_name = f"d_{d_field}"
                     display_method = make_display_hook(field)
 
                     setattr(CustomAdmin, method_name, display_method)
                     display_fields.append(method_name)
 
-                # we initially intended for
                 if model_field.in_autocomplete_list and model_field.is_foreign_key:
-                    autocomplete_fields.append(field[:-3] if field.endswith("_id") else field)
+                    autocomplete_fields.append(d_field)
 
                 if model_field.in_searchable_list:
                     search_fields.append(field)

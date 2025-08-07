@@ -3,7 +3,7 @@ import json
 import psycopg2
 from django.conf import settings
 from django.db import models
-from inflection import pluralize
+from inflection import pluralize, singularize
 
 from account.models import DBSyncModelColumn
 from utils.log_util import AppLogger
@@ -143,7 +143,7 @@ def build_dynamic_models():
                 'managed': False,
                 'default_manager_name': 'objects',
                 "verbose_name_plural": pluralize(table_name.replace("_", " ").title()),
-                "verbose_name": table_name.replace("_", " ").title(),
+                "verbose_name": singularize(table_name).replace("_", " ").title(),
             })
         }
 
@@ -200,7 +200,7 @@ def build_dynamic_models():
 
                 column_ids.append(rec.id)
             except Exception as e:
-                AppLogger.report(e)
+                pass
 
             if foreign_key:
                 continue  # Skip foreign keys in the first pass
