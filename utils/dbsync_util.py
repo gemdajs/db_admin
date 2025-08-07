@@ -359,9 +359,6 @@ def introspect_postgres_schema():
             "relations": relations
         }
 
-    with open("schema_def.json", "w") as f:
-        json.dump(schema, f, indent=2)
-
     cur.close()
     conn.close()
 
