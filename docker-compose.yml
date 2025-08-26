@@ -1,6 +1,7 @@
 volumes:
   media:
   static:
+  sqlite_data:
 
 services:
 
@@ -14,6 +15,7 @@ services:
       - ./.env:/home/app/.env
       - static:/home/app/static
       - media:/home/app/media
+      - sqlite_data:/home/app/db.sqlite3
     ports:
       - "8030:8030"
     networks:
