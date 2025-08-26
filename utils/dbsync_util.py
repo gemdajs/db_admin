@@ -1,12 +1,9 @@
-import json
-
 import psycopg2
 from django.conf import settings
 from django.db import models
 from inflection import pluralize, singularize
 
 from account.models import DBSyncModelColumn
-from utils.log_util import AppLogger
 
 _model_registry_built = False
 
@@ -92,7 +89,9 @@ def get_base_model_name(table):
 def make_str_method(name):
     def _str(self):
 
-        value_list = list(DBSyncModelColumn.objects.filter(model=name, repr_order__isnull=False).order_by("repr_order").values_list("name", flat=True))
+        value_list = list(
+            DBSyncModelColumn.objects.filter(model=name, repr_order__isnull=False).order_by("repr_order").values_list(
+                "name", flat=True))
         if not value_list:
             if hasattr(settings, "MODEL_STRING_VALUE_MAPS"):
                 name_maps = getattr(settings, "MODEL_STRING_VALUE_MAPS")
@@ -190,7 +189,8 @@ def build_dynamic_models():
                     }
                 )
 
-                if (rec.order != order and order > 0 and not is_created) or (foreign_key and not rec.is_foreign_key) or (not foreign_key and rec.is_foreign_key):
+                if (rec.order != order and order > 0 and not is_created) or (
+                        foreign_key and not rec.is_foreign_key) or (not foreign_key and rec.is_foreign_key):
                     rec.is_foreign_key = foreign_key is not None
                     rec.description = col_type
                     rec.order = order
@@ -363,5 +363,6 @@ def introspect_postgres_schema():
     conn.close()
 
     return schema
+
 
 app_models = build_dynamic_models()

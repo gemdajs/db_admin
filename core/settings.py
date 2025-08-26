@@ -90,17 +90,6 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": BROKER_URL,
-        "KEY_PREFIX": os.getenv("REDIS_PREFIX", "dbsync"),
-        "TIMEOUT": 60 * 15,
-    }
-}
-
 EXEMPTED_ORIGINS = os.getenv("EXEMPTED_ORIGINS", "").split(",")
 ALLOWED_HOSTS = EXEMPTED_ORIGINS
 CORS_ALLOWED_ORIGINS = os.getenv("WHITELISTED_ORIGINS", "").split(",")

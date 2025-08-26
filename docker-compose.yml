@@ -1,0 +1,24 @@
+volumes:
+  media:
+  static:
+
+services:
+
+  django_server:
+    build: .
+    container_name: djadmin_server
+    restart: always
+    image: djadmin_image
+    command: bash -c "python manage.py run_setup && gunicorn core.wsgi:application --access-logfile - --workers 2 --timeout 300 --reload --bind 0.0.0.0:8030"
+    volumes:
+      - ./.env:/home/app/.env
+      - static:/home/app/static
+      - media:/home/app/media
+    ports:
+      - "8030:8030"
+    networks:
+      - djadmin_network
+
+networks:
+  djadmin_network:
+    external: true
