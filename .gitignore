@@ -3,7 +3,6 @@ venv
 .env
 */.env
 .idea/*
-db.sqlite3
 .hg/*
 *.pyc
 *.orig
